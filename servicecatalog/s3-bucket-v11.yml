@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Bucket S3 v1.0
+
+Parameters:
+  S3BucketName:
+    Type: String
+
+Resources:
+  S3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      BucketName: !Ref S3BucketName
+      LifecycleConfiguration:
+        Rules:
+          - AbortIncompleteMultipartUpload: 
+              DaysAfterInitiation: 7
+            Id: archive-old-versions-to-glacier
+            Status: Enabled
+            Transitions:
+              - StorageClass: GLACIER
+                TransitionInDays: 7
+      VersioningConfiguration:
+        Status: Enabled
+

@@ -1,0 +1,113 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Service Catalog Resources
+
+Parameters:
+  CloudFormationBucket:
+    Type: String
+
+Resources:
+  Portfolio:
+    Type: "AWS::ServiceCatalog::Portfolio"
+    Properties:
+      ProviderName: TDA
+      DisplayName: Main Portfolio
+
+  S3BucketProduct:
+    Type: AWS::ServiceCatalog::CloudFormationProduct
+    Properties:
+      Owner: TDA
+      Description: S3 Bucket
+      Name: s3-bucket
+      ProvisioningArtifactParameters:
+        - Description: Just a simple S3 bucket
+          Info:
+            LoadTemplateFromURL: !Sub https://${CloudFormationBucket}.s3.amazonaws.com/service-catalog/s3-bucket-v10.yml
+          Name: v1.0
+        - Description: Simple S3 bucket with some more options (encryption, versioning, lifecycle)
+          Info:
+            LoadTemplateFromURL: !Sub https://${CloudFormationBucket}.s3.amazonaws.com/service-catalog/s3-bucket-v11.yml
+          Name: v1.1
+
+  S3BucketPortfolioProductAssociation:
+    Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
+    Properties:
+      AcceptLanguage: en
+      PortfolioId: !Ref Portfolio
+      ProductId: !Ref S3BucketProduct
+
+  PortfolioPrincipalAssociation:
+    Type: "AWS::ServiceCatalog::PortfolioPrincipalAssociation"
+    Properties:
+      PrincipalARN: !GetAtt ProvisioningRole.Arn
+      PortfolioId: !Ref Portfolio
+      PrincipalType: IAM
+
+  TagOptionForDepartment:
+    Type: AWS::ServiceCatalog::TagOption
+    Properties:
+      Active: true
+      Value: IT
+      Key: Department
+
+  AssociationForTagOptionForDepartment:
+    Type: AWS::ServiceCatalog::TagOptionAssociation
+    Properties:
+      TagOptionId: !Ref TagOptionForDepartment
+      ResourceId: !Ref Portfolio
+
+  ProvisioningRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ServiceCatalogEndUserAccess
+      Policies:
+        - PolicyName: service-catalog-additional
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - cloudformation:GetTemplateSummary
+                  - servicecatalog:Describe*
+                  - servicecatalog:List*
+                  - servicecatalog:ProvisionProduct
+                  - servicecatalog:ScanProvisionedProducts
+                  - servicecatalog:TerminateProvisionedProduct
+                  - servicecatalog:UpdateProvisionedProduct
+              - Resource: !GetAtt ServiceCatalogRole.Arn
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+  ServiceCatalogRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: servicecatalog.amazonaws.com
+      Policies:
+        - PolicyName: service-wide-permissions
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - s3:*
+                  - cloudformation:*
+
+  PortfolioRole:
+    Type: "AWS::ServiceCatalog::LaunchRoleConstraint"
+    Properties:
+      PortfolioId: !Ref Portfolio
+      ProductId: !Ref S3BucketProduct
+      RoleArn: !GetAtt ServiceCatalogRole.Arn
