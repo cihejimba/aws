@@ -1,6 +1,7 @@
 # https://seanjziegler.com/how-to-build-an-api-with-aws-lambda-and-api-gateway-using-aws-sam/
 # https://www.honeybadger.io/blog/ruby-aws-lambda/
 # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-templates.html
+# https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/ruby/example_code/sqs/sqs-ruby-example-send-receive-messages.rb
 
 first time
 ==========
