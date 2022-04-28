@@ -49,7 +49,7 @@ def lambda_handler(event:, context:)
     # Create a message with three custom attributes: Title, Author, and WeeksOn.
     send_message_result = sqs.send_message({
                                              queue_url: queue_url,
-                                             message_body: Time.now,
+                                             message_body: Time.now.to_s,
                                              message_attributes: {
                                                "id" => {
                                                  string_value: uuid,
