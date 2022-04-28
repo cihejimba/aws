@@ -38,6 +38,29 @@ def lambda_handler(event:, context:)
   item.save!
   item.to_h
   
+  # https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/ruby/example_code/sqs/sqs-ruby-example-send-receive-messages.rb
+
+  begin
+    queue_url = ENV['SQS_QUEUE_URL']
+
+    # Create a message with three custom attributes: Title, Author, and WeeksOn.
+    send_message_result = sqs.send_message({
+                                             queue_url: queue_url,
+                                             message_body: "",
+                                             message_attributes: {
+                                               "id" => {
+                                                 string_value: uuid,
+                                                 data_type: "String"
+                                               }
+                                             }
+                                           })
+  rescue Aws::SQS::Errors::NonExistentQueue
+    puts "A queue url '#{queue_url}' does not exist."
+    exit(false)
+  end
+
+  puts send_message_result.message_id
+  
   {
     statusCode: 200,
     body: {

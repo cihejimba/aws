@@ -3,5 +3,6 @@ source "https://rubygems.org"
 #gem "httparty"
 #gem "aws-sdk-dynamodb"
 gem "aws-record", '~> 2'
+gem "aws-sdk-sqs"
 
 ruby '~> 2.7.0'

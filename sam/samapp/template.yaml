@@ -18,9 +18,12 @@ Resources:
       Policies:
         - DynamoDBWritePolicy:
             TableName: !Ref DynamoDBTable
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt MySqsQueue.QueueName
       Environment:
         Variables:
-          TEXTS_TABLE: !Ref DynamoDBTable   
+          TEXTS_TABLE: !Ref DynamoDBTable
+          SQS_QUEUE_URL: !Ref MySqsQueue
       Events:
         Translate:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -49,6 +52,12 @@ Resources:
 #      StreamSpecification:
 #        StreamViewType: NEW_IMAGE
 
+  MySqsQueue:
+    Type: AWS::SQS:Queue
+
+
+  
+
 
 
 
@@ -68,3 +77,6 @@ Outputs:
   DynamoDBTable:
     Description: "DynamoDB Table"
     Value: !GetAtt DynamoDBTable.Arn
+  SQSQueueURL:
+    Description: SQS Queue URL
+    Value: !Ref MySqsQueue
