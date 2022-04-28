@@ -1,9 +1,7 @@
 source "https://rubygems.org"
 
 #gem "httparty"
+#gem "aws-sdk-dynamodb"
 gem "aws-record", '~> 2'
 
-group :test do
-  gem "test-unit"
-  gem "mocha"
-end
+ruby '~> 2.7.0'
