@@ -1,6 +1,7 @@
 require 'json'
 require 'securerandom'
 require 'aws-record'
+require 'aws-sdk-sqs'
 
 class TextsTable
   include Aws::Record
@@ -40,13 +41,15 @@ def lambda_handler(event:, context:)
   
   # https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/ruby/example_code/sqs/sqs-ruby-example-send-receive-messages.rb
 
+  sqs_msg_id = ""
   begin
+    sqs = Aws::SQS::Client.new
     queue_url = ENV['SQS_QUEUE_URL']
 
     # Create a message with three custom attributes: Title, Author, and WeeksOn.
     send_message_result = sqs.send_message({
                                              queue_url: queue_url,
-                                             message_body: "",
+                                             message_body: ENV['TEXTS_TABLE'],
                                              message_attributes: {
                                                "id" => {
                                                  string_value: uuid,
@@ -54,19 +57,20 @@ def lambda_handler(event:, context:)
                                                }
                                              }
                                            })
-  rescue Aws::SQS::Errors::NonExistentQueue
-    puts "A queue url '#{queue_url}' does not exist."
-    exit(false)
+    sqs_msg_id = send_message_result.message_id
+  rescue => e
+    sqs_msg_id = e.message
   end
 
-  puts send_message_result.message_id
+
   
   {
     statusCode: 200,
     body: {
       text: text,
       uuid: uuid,
-      expired_at: expired_at
+      expired_at: expired_at,
+      sqs_msg_id: sqs_msg_id
     }.to_json
   }
   
