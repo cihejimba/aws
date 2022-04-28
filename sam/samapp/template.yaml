@@ -52,8 +52,9 @@ Resources:
 #      StreamSpecification:
 #        StreamViewType: NEW_IMAGE
 
+
   MySqsQueue:
-    Type: AWS::SQS:Queue
+    Type: AWS::SQS::Queue
 
 
   
