@@ -1,5 +1,15 @@
 require 'sinatra/base'
 require 'logger'
+require 'aws-record'
+
+class TextsTable
+  include Aws::Record
+  set_table_name ENV['DYNAMODB_TABLE_NAME']
+  string_attr :id, hash_key: true
+  string_attr :text
+  string_attr :expired_at
+end
+
 
 class WorkerSample < Sinatra::Base
     set :logging, true
@@ -15,7 +25,12 @@ class WorkerSample < Sinatra::Base
     post '/' do
         msg_id = request.env["HTTP_X_AWS_SQSD_MSGID"]
         data = request.body.read
-        @@logger.info "Received message: #{data} msgid=#{msg_id} DYNAMODB_TABLE_NAME=#{ENV['DYNAMODB_TABLE_NAME']} WORKER_QUEUE_URL=#{ENV['WORKER_QUEUE_URL']}"
+
+        item_id = request.env["HTTP_X_AWS_SQSD_ATTR_ID"]
+        
+        item = TextsTable.find(id: item_id)
+        
+        @@logger.info "Received message: #{data} msgid=#{msg_id} item=#{item.text} item_id=#{item_id}"
     end
 
     post '/scheduled' do
