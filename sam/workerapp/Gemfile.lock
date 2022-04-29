@@ -13,6 +13,9 @@ GEM
     aws-sdk-dynamodb (1.74.0)
       aws-sdk-core (~> 3, >= 3.127.0)
       aws-sigv4 (~> 1.1)
+    aws-sdk-translate (1.44.0)
+      aws-sdk-core (~> 3, >= 3.127.0)
+      aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.0)
       aws-eventstream (~> 1, >= 1.0.2)
     jmespath (1.6.1)
@@ -39,6 +42,7 @@ PLATFORMS
 
 DEPENDENCIES
   aws-record (~> 2)
+  aws-sdk-translate (~> 1.44)
   puma
   rack-parser
   sinatra

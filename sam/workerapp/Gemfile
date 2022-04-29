@@ -2,4 +2,5 @@ source "https://rubygems.org"
 gem 'sinatra'
 gem 'rack-parser'
 gem 'puma'
-gem "aws-record", '~> 2'
+gem 'aws-record', '~> 2'
+gem 'aws-sdk-translate', '~> 1.44'
