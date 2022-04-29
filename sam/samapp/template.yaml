@@ -13,6 +13,10 @@ Parameters:
     Type: String
     Default: SAMAppQueue
     Description: SQS Queue name
+  TableName:
+    Type: String
+    Default: Texts
+    Description: DynamoDB Table Name
 
 Resources:
   TranslateFunction:
@@ -54,7 +58,7 @@ Resources:
       TimeToLiveSpecification:
         AttributeName: expired_at
         Enabled: true
-      TableName: "Texts"
+      TableName: !Ref 'TableName'
 #      StreamSpecification:
 #        StreamViewType: NEW_IMAGE
 
