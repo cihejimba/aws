@@ -17,6 +17,18 @@ sam local invoke -e events/translate.json
   "errorMessage": "The security token included in the request is invalid",
   "errorType": "Function<Aws::DynamoDB::Errors::UnrecognizedClientException>",
 
+il faut avoir une dynamodb en local
+
+sinon pour utiliser le dynamodb remote il faut positionner les access key
+et dans .bashrc il faut exporter AWS_ACCESS_KEY_ID et AWS_SECRET_KEY
+
+  AWS.config.update({
+    accessKeyId: ENV['AWS_ACCESS_KEY_ID'],
+    secretAccessKey: ENV['AWS_SECRET_KEY'],
+    region: awsRegion
+  });
+
+
 
 build et deploy
 ===============

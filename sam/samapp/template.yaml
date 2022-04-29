@@ -8,6 +8,12 @@ Globals:
   Function:
     Timeout: 3
 
+Parameters:
+  QueueName:
+    Type: String
+    Default: SAMAppQueue
+    Description: SQS Queue name
+
 Resources:
   TranslateFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -55,6 +61,8 @@ Resources:
 
   MySqsQueue:
     Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref 'QueueName'
 
 
   
