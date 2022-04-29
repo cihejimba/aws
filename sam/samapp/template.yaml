@@ -88,8 +88,12 @@ Outputs:
     Description: "Implicit IAM Role created for Translate function"
     Value: !GetAtt TranslateFunctionRole.Arn
   DynamoDBTable:
-    Description: "DynamoDB Table"
-    Value: !GetAtt DynamoDBTable.Arn
+    Description: "DynamoDB Table Name"
+    Value: !Ref DynamoDBTable
+    Export:
+      Name: samapp-dynamodb-table-name
   SQSQueueURL:
     Description: SQS Queue URL
     Value: !Ref MySqsQueue
+    Export:
+      Name: samapp-sqs-queue-url

@@ -15,7 +15,7 @@ class WorkerSample < Sinatra::Base
     post '/' do
         msg_id = request.env["HTTP_X_AWS_SQSD_MSGID"]
         data = request.body.read
-        @@logger.info "Received message: #{data} msgid=#{msg_id} DYNAMODB_TABLE_NAME=#{ENV['DYNAMODB_TABLE_NAME']}"
+        @@logger.info "Received message: #{data} msgid=#{msg_id} DYNAMODB_TABLE_NAME=#{ENV['DYNAMODB_TABLE_NAME']} WORKER_QUEUE_URL=#{ENV['WORKER_QUEUE_URL']}"
     end
 
     post '/scheduled' do
