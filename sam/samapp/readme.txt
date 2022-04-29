@@ -36,4 +36,4 @@ sam build && sam deploy
 
 test 
 ====
-curl -X POST https://o0d6eai1rj.execute-api.us-east-1.amazonaws.com/Prod/translate?text=salut
+curl -X POST https://2rkzv65wz1.execute-api.us-east-1.amazonaws.com/Prod/translate?text=salut
