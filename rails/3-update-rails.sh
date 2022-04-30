@@ -1,7 +1,7 @@
 # Turning off the AWS pager so that the CLI doesn't open an editor for each command result
 export AWS_PAGER=""
 
-aws cloudformation create-stack \
+aws cloudformation update-stack \
   --stack-name rails-service \
   --template-body file://rails-service.yml \
   --capabilities CAPABILITY_IAM \
