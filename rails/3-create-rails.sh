@@ -1,12 +1,13 @@
 # Turning off the AWS pager so that the CLI doesn't open an editor for each command result
 export AWS_PAGER=""
 
-aws cloudformation update-stack \
+aws cloudformation create-stack \
   --stack-name rails-service \
   --template-body file://rails-service.yml \
   --capabilities CAPABILITY_IAM \
   --parameters \
-      ParameterKey=StackName,ParameterValue=rails-network \
+      ParameterKey=NetworkStackName,ParameterValue=rails-network \
+      ParameterKey=DatabaseStackName,ParameterValue=rails-database \
       ParameterKey=ServiceName,ParameterValue=rails \
       ParameterKey=ImageUrl,ParameterValue=yeasy/simple-web:latest \
       ParameterKey=ContainerPort,ParameterValue=80 \

@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Deploy a service on AWS ECS EC2, hosted in two public subnets and accessible via a public load balancer.
 Parameters:
-  StackName:
+  NetworkStackName:
     Type: String
     Description: The name of the networking stack that
       these resources are put into.
@@ -94,7 +94,9 @@ Parameters:
   KeyName:
     Type: 'AWS::EC2::KeyPair::KeyName'
     Description: Name of an existing EC2 KeyPair to enable SSH access to the ECS instances.    
-
+  DatabaseStackName:
+    Type: String
+    Description: The name of the database stack with the database this service should connect to.  
 
     
 Resources:
@@ -114,7 +116,7 @@ Resources:
       UnhealthyThresholdCount: 2
       VpcId:
         Fn::ImportValue:
-          !Join [':', [!Ref 'StackName', 'VPCId']]
+          !Join [':', [!Ref 'NetworkStackName', 'VPCId']]
 
   LoadBalancerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -127,7 +129,7 @@ Resources:
           Values: [!Ref 'Path']
       ListenerArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'StackName', 'PublicListener']]
+          !Join [':', [!Ref 'NetworkStackName', 'PublicListener']]
       Priority: 1
 
   LogGroup:
@@ -147,12 +149,34 @@ Resources:
         - EC2
       ExecutionRoleArn:
         Fn::ImportValue:
-          !Join [':', [!Ref 'StackName', 'ECSTaskExecutionRole']]
+          !Join [':', [!Ref 'NetworkStackName', 'ECSTaskExecutionRole']]
       ContainerDefinitions:
         - Name: !Ref 'ServiceName'
           Cpu: !Ref 'ContainerCpu'
           Memory: !Ref 'ContainerMemory'
           Image: !Ref 'ImageUrl'
+          Environment:
+            - Name: DATASOURCE_URL
+              Value: !Join
+                - ''
+                - - 'jdbc:postgresql://'
+                  - Fn::ImportValue: !Join [':', [!Ref 'DatabaseStackName', 'EndpointAddress']]
+                  - ':'
+                  - Fn::ImportValue: !Join [':', [!Ref 'DatabaseStackName', 'EndpointPort']]
+                  - '/'
+                  - Fn::ImportValue: !Join [':', [!Ref 'DatabaseStackName', 'DBName']]
+            - Name: DATASOURCE_USERNAME
+              Value: !Join
+                - ''
+                - - '{{resolve:secretsmanager:'
+                  - Fn::ImportValue: !Join [':', [!Ref 'DatabaseStackName', 'Secret']]
+                  - ':SecretString:username}}'
+            - Name: DATASOURCE_PASSWORD
+              Value: !Join
+                - ''
+                - - '{{resolve:secretsmanager:'
+                  - Fn::ImportValue: !Join [':', [!Ref 'DatabaseStackName', 'Secret']]
+                  - ':SecretString:password}}'
           PortMappings:
             - ContainerPort: !Ref 'ContainerPort'
           LogConfiguration:
@@ -169,7 +193,7 @@ Resources:
       ServiceName: !Ref 'ServiceName'
       Cluster:
         Fn::ImportValue:
-          !Join [':', [!Ref 'StackName', 'ClusterName']]
+          !Join [':', [!Ref 'NetworkStackName', 'ClusterName']]
       LaunchType: EC2
       DeploymentConfiguration:
         MaximumPercent: 200
@@ -181,12 +205,12 @@ Resources:
 #          AssignPublicIp: ENABLED
 #          SecurityGroups:
 #            - Fn::ImportValue:
-#                !Join [':', [!Ref 'StackName', 'ECSSecurityGroup']]
+#                !Join [':', [!Ref 'NetworkStackName', 'ECSSecurityGroup']]
 #          Subnets:
 #            - Fn::ImportValue:
-#                !Join [':', [!Ref 'StackName', 'PublicSubnetOne']]
+#                !Join [':', [!Ref 'NetworkStackName', 'PublicSubnetOne']]
 #            - Fn::ImportValue:
-#                !Join [':', [!Ref 'StackName', 'PublicSubnetTwo']]
+#                !Join [':', [!Ref 'NetworkStackName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
@@ -199,9 +223,9 @@ Resources:
     Properties:
       VPCZoneIdentifier:
         - Fn::ImportValue:
-            !Join [':', [!Ref 'StackName', 'PublicSubnetOne']]
+            !Join [':', [!Ref 'NetworkStackName', 'PublicSubnetOne']]
         - Fn::ImportValue:
-            !Join [':', [!Ref 'StackName', 'PublicSubnetTwo']]              
+            !Join [':', [!Ref 'NetworkStackName', 'PublicSubnetTwo']]              
       LaunchConfigurationName: !Ref ContainerInstances
       MinSize: '1'
       MaxSize: !Ref MaxSize
@@ -219,7 +243,7 @@ Resources:
       ImageId: !Ref 'LatestECSOptimizedAMI'
       SecurityGroups:
         - Fn::ImportValue:                                                                                                                                                                                                                 
-            !Join [':', [!Ref 'StackName', 'ECSSecurityGroup']]
+            !Join [':', [!Ref 'NetworkStackName', 'ECSSecurityGroup']]
       InstanceType: !Ref InstanceType
       IamInstanceProfile: !Ref EC2InstanceProfile
       KeyName: !Ref KeyName
@@ -230,7 +254,7 @@ Resources:
               #!/bin/bash -xe
             - echo ECS_CLUSTER=
             - Fn::ImportValue:
-                !Join [':', [!Ref 'StackName', 'ClusterName']]
+                !Join [':', [!Ref 'NetworkStackName', 'ClusterName']]
             - |2
                >> /etc/ecs/ecs.config
             - |
