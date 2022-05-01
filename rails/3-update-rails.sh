@@ -8,12 +8,12 @@ aws cloudformation update-stack \
   --parameters \
       ParameterKey=StackName,ParameterValue=rails-network \
       ParameterKey=ServiceName,ParameterValue=rails \
-      ParameterKey=ImageUrl,ParameterValue=docker.io/bitnami/rails:7 \
-      ParameterKey=ContainerPort,ParameterValue=3000 \
+      ParameterKey=ImageUrl,ParameterValue=hello-world \
+      ParameterKey=ContainerPort,ParameterValue=80 \
       ParameterKey=HealthCheckPath,ParameterValue=/ \
       ParameterKey=HealthCheckIntervalSeconds,ParameterValue=90 \
       ParameterKey=DesiredCount,ParameterValue=1 \
-      ParameterKey=ContainerCpu,ParameterValue=512 \
-      ParameterKey=ContainerMemory,ParameterValue=1024 \
+      ParameterKey=ContainerCpu,ParameterValue=256 \
+      ParameterKey=ContainerMemory,ParameterValue=256 \
 
 #aws cloudformation wait stack-create-complete --stack-name rails-service
