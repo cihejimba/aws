@@ -15,5 +15,6 @@ aws cloudformation create-stack \
       ParameterKey=DesiredCount,ParameterValue=1 \
       ParameterKey=ContainerCpu,ParameterValue=256 \
       ParameterKey=ContainerMemory,ParameterValue=256 \
+      ParameterKey=KeyName,ParameterValue=KeyPair-us-east-1
 
 #aws cloudformation wait stack-create-complete --stack-name rails-service

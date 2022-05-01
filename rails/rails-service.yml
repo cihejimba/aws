@@ -91,7 +91,9 @@ Parameters:
     Description: AMI ID
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: /aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id
-    
+  KeyName:
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the ECS instances.    
 
 
     
@@ -105,7 +107,7 @@ Resources:
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
-      TargetType: ip
+      TargetType: instance
       Name: !Ref 'ServiceName'
       Port: !Ref 'ContainerPort'
       Protocol: HTTP
@@ -140,7 +142,7 @@ Resources:
       Family: !Ref 'ServiceName'
       Cpu: !Ref 'ContainerCpu'
       Memory: !Ref 'ContainerMemory'
-      NetworkMode: awsvpc
+#      NetworkMode: awsvpc
       RequiresCompatibilities:
         - EC2
       ExecutionRoleArn:
@@ -174,17 +176,17 @@ Resources:
         MinimumHealthyPercent: 0
       DesiredCount: !Ref 'DesiredCount'
       HealthCheckGracePeriodSeconds: 600
-      NetworkConfiguration:
-        AwsvpcConfiguration:
+#      NetworkConfiguration:
+#        AwsvpcConfiguration:
 #          AssignPublicIp: ENABLED
-          SecurityGroups:
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'StackName', 'ECSSecurityGroup']]
-          Subnets:
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'StackName', 'PublicSubnetOne']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'StackName', 'PublicSubnetTwo']]
+#          SecurityGroups:
+#            - Fn::ImportValue:
+#                !Join [':', [!Ref 'StackName', 'ECSSecurityGroup']]
+#          Subnets:
+#            - Fn::ImportValue:
+#                !Join [':', [!Ref 'StackName', 'PublicSubnetOne']]
+#            - Fn::ImportValue:
+#                !Join [':', [!Ref 'StackName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
@@ -220,7 +222,7 @@ Resources:
             !Join [':', [!Ref 'StackName', 'ECSSecurityGroup']]
       InstanceType: !Ref InstanceType
       IamInstanceProfile: !Ref EC2InstanceProfile
-#      KeyName: !Ref KeyName
+      KeyName: !Ref KeyName
       UserData: !Base64 
         'Fn::Join':
           - ''
