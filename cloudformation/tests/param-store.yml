@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Testing stack
+
+Parameters:
+  ApplicationElbSubnets:
+    Type: AWS::SSM::Parameter::Value<List<String>>
+    Description: choose from an existing subnet(s)
+
+Resources:
+  BasicParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: demoparam
+      Type: StringList
+      Value: "hello,world"
+      Description: SSM Parameter of type StringList
+
+Outputs:
+  DemoOutput:
+    Description: The name of he resource
+    Value: !Join [',',  !Split [ ',', !GetAtt 'BasicParameter.Value' ]]
+  ParamOutput:
+    Description: The name of he resource
+    #Value: !Join [',',  !Split [ ',', !Ref 'ApplicationElbSubnets' ]]
+    Value: !Join [',', !Ref 'ApplicationElbSubnets' ]
