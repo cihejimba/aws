@@ -1,0 +1,46 @@
+# Hugo Forte
+# SproutedKitchenCookingClub-env
+# migrated to
+# SproutedKitchenCookingClub-env-v2
+
+eb init
+# us-east-1
+# Sprouted Kitchen Cooking Club
+
+eb config get SproutedKitchenCookingClub-env-28062022
+
+# Configuration saved at: /home/thai/awsiq/.elasticbeanstalk/saved_configs/SproutedKitchenCookingClub-env-28062022.cfg.yml
+
+eb platform list | grep node
+# node.js
+# node.js-10
+# node.js-12
+# node.js-12-(beta)
+# node.js-14
+# node.js-16
+
+
+eb health
+eb create SproutedKitchenCookingClub-env-v2 -p node.js-16
+
+eb use SproutedKitchenCookingClub-env-v2
+
+eb config save
+# SproutedKitchenCookingClub-env-v2-28062022.cfg.yml
+# Configuration saved at: /home/thai/awsiq/.elasticbeanstalk/saved_configs/SproutedKitchenCookingClub-env-v2-28062022.cfg.yml
+
+
+# copy OptionSettings of SproutedKitchenCookingClub-env-28062022.cfg.yml
+# to SproutedKitchenCookingClub-env-v2-28062022.cfg.yml
+# suppress the lines
+#  aws:elasticbeanstalk:container:nodejs:
+#    NodeCommand: npm start
+
+
+eb config put SproutedKitchenCookingClub-env-v2-28062022.cfg.yml
+
+aws elasticbeanstalk update-environment --environment-name SproutedKitchenCookingClub-env-v2 --template-name SproutedKitchenCookingClub-env-v2-28062022
+
+# terminate SproutedKitchenCookingClub-env-v2
+# then create a new SproutedKitchenCookingClub-env-v2-b from SproutedKitchenCookingClub-env-v2-28062022.cfg.yml
+

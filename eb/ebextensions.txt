@@ -1,0 +1,16 @@
+# https://github.com/alextanhongpin/cheat-sheet/blob/master/aws.md
+
+.ebextensions/01_nginx.config   
+files:
+  "/etc/nginx/conf.d/01_proxy.conf":
+    mode: "000644"
+    owner: root
+    group: root
+    content: |
+      client_max_body_size 50M;
+      
+container_commands:
+  01_reload_nginx:
+    command: |
+      sudo service nginx restart
+

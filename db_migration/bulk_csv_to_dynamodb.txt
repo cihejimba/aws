@@ -1,0 +1,6 @@
+# https://aws.amazon.com/fr/blogs/database/implementing-bulk-csv-ingestion-to-amazon-dynamodb/
+# https://github.com/aws-samples/csv-to-dynamodb
+
+# https://blog.victor.com.au/import-export-data-from-dynamodb-small-amounts/
+# https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html
+

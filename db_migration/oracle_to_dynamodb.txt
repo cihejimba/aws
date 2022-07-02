@@ -1,0 +1,2 @@
+# https://catalog.us-east-1.prod.workshops.aws/workshops/93f64257-52be-4c12-a95b-c0a1ff3b7e2b/en-US/lab1/oracletoddb
+# https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.DynamoDB.html
