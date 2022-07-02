@@ -1,4 +1,5 @@
 # https://docs.aws.amazon.com/codepipeline/latest/userguide/tutorials-four-stage-pipeline.html
+# https://github.com/awslabs/aws-cloudformation-templates/tree/master/aws/services/ECS
 
 configuration de jenkins :
 - installer le plugin AWS CodePipeline
