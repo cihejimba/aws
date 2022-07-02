@@ -3,7 +3,7 @@ export AWS_PAGER=""
 
 aws cloudformation create-stack \
   --stack-name jenkins-service \
-  --template-body file://jenkins-service-efs-fargate.yml \
+  --template-body file://jenkins-service-efs.yml \
   --capabilities CAPABILITY_IAM \
   --parameters \
       ParameterKey=StackName,ParameterValue=jenkins-network \

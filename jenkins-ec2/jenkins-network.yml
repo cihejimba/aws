@@ -204,6 +204,8 @@ Resources:
                   - 'logs:PutLogEvents'
                 Resource: '*'
 
+
+                
 Outputs:
   ClusterName:
     Description: The name of the ECS cluster
@@ -250,3 +252,4 @@ Outputs:
     Value: !Ref 'ECSSecurityGroup'
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ECSSecurityGroup' ] ]
+

@@ -1,6 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Deploy a service on AWS Fargate, hosted in two public subnets and accessible via a public load balancer.
-  Derived from a template at https://github.com/nathanpeck/aws-cloudformation-fargate.
+Description: Deploy a service on AWS EC2, hosted in two public subnets and accessible via a public load balancer.
+  Derived from a template at https://github.com/nathanpeck/aws-cloudformation-fargate
+  and https://github.com/awslabs/aws-cloudformation-templates/blob/master/aws/services/ECS/EC2LaunchType/clusters/public-vpc.yml
 Parameters:
   StackName:
     Type: String
@@ -100,9 +101,9 @@ Resources:
       Family: !Ref 'ServiceName'
       Cpu: !Ref 'ContainerCpu'
       Memory: !Ref 'ContainerMemory'
-      NetworkMode: awsvpc
+      NetworkMode: bridge
       RequiresCompatibilities:
-        - FARGATE
+        - EC2
       ExecutionRoleArn:
         Fn::ImportValue:
           !Join [':', [!Ref 'StackName', 'ECSTaskExecutionRole']]
@@ -138,29 +139,30 @@ Resources:
       Cluster:
         Fn::ImportValue:
           !Join [':', [!Ref 'StackName', 'ClusterName']]
-      LaunchType: FARGATE
+      LaunchType: EC2
       DeploymentConfiguration:
         MaximumPercent: 200
         MinimumHealthyPercent: 50
       DesiredCount: !Ref 'DesiredCount'
       HealthCheckGracePeriodSeconds: 600
-      NetworkConfiguration:
-        AwsvpcConfiguration:
-          AssignPublicIp: ENABLED
-          SecurityGroups:
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'StackName', 'ECSSecurityGroup']]
-          Subnets:
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'StackName', 'PublicSubnetOne']]
-            - Fn::ImportValue:
-                !Join [':', [!Ref 'StackName', 'PublicSubnetTwo']]
+#      NetworkConfiguration:
+#        AwsvpcConfiguration:
+#          AssignPublicIp: ENABLED
+#          SecurityGroups:
+#            - Fn::ImportValue:
+#                !Join [':', [!Ref 'StackName', 'ECSSecurityGroup']]
+#          Subnets:
+#            - Fn::ImportValue:
+#                !Join [':', [!Ref 'StackName', 'PublicSubnetOne']]
+#            - Fn::ImportValue:
+#                !Join [':', [!Ref 'StackName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
           ContainerPort: !Ref 'ContainerPort'
           TargetGroupArn: !Ref 'TargetGroup'
-
+      Role: !Ref MyECSRole
+      
 
   MountTargetSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -219,6 +221,21 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AWSCodePipelineCustomActionAccess
 
+  MyECSRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2008-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: ecs.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerService
+
+        
 Outputs:
   MountTargetAZ1ID:
     Description: Mount target ID
