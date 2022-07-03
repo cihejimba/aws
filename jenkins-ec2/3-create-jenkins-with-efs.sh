@@ -18,4 +18,4 @@ aws cloudformation create-stack \
       ParameterKey=VolumeName,ParameterValue=jenkins-volume \
       ParameterKey=MountPoint,ParameterValue=jenkins-mountpoint 
 
-aws cloudformation wait stack-create-complete --stack-name jenkins-service
+#aws cloudformation wait stack-create-complete --stack-name jenkins-service

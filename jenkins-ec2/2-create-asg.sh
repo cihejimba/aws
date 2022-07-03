@@ -8,7 +8,7 @@ aws cloudformation create-stack \
   --parameters \
       ParameterKey=StackName,ParameterValue=jenkins-network \
       ParameterKey=DesiredCapacity,ParameterValue=1 \
-      ParameterKey=MaxSize,ParameterValue=2 \
-      ParameterKey=InstanceType,ParameterValue=t2.micro 
+      ParameterKey=MaxSize,ParameterValue=1 \
+      ParameterKey=InstanceType,ParameterValue=t2.medium 
 
-aws cloudformation wait stack-create-complete --stack-name jenkins-asg
+#aws cloudformation wait stack-create-complete --stack-name jenkins-asg

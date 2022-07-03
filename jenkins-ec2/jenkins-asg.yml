@@ -3,6 +3,9 @@ Description: A stack for deploying ASG for containerized applications onto a clu
              hosts using Elastic Container Service
              Derived from https://github.com/awslabs/aws-cloudformation-templates/blob/master/aws/services/ECS/EC2LaunchType/clusters/public-vpc.yml
 Parameters:
+  StackName:
+    Type: String
+    Description: The name of the networking stack that these resources are put into.
   DesiredCapacity:
     Type: Number
     Default: '3'
@@ -26,7 +29,8 @@ Parameters:
       r3.8xlarge, i2.xlarge, i2.2xlarge, i2.4xlarge, i2.8xlarge]
     ConstraintDescription: Please choose a valid instance type.
 
-
+    
+Resources:
     
  # Autoscaling group. This launches the actual EC2 instances that will register
   # themselves as members of the cluster, and run the docker containers.
@@ -34,8 +38,10 @@ Parameters:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       VPCZoneIdentifier:
-        - !ImportValue [!Join [':', [!Ref 'StackName', 'PublicSubnetOne']]]
-        - !ImportValue [!Join [':', [!Ref 'StackName', 'PublicSubnetTwo']]]
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'StackName', 'PublicSubnetOne']]
+        - Fn::ImportValue:
+            !Join [':', [!Ref 'StackName', 'PublicSubnetTwo']]
       LaunchConfigurationName: !Ref 'ContainerInstances'
       MinSize: '1'
       MaxSize: !Ref 'MaxSize'
@@ -47,20 +53,27 @@ Parameters:
       AutoScalingReplacingUpdate:
         WillReplace: 'true'
 
-        
+
+# https://medium.com/pablo-perez/how-do-i-import-a-stack-export-value-within-userdata-in-another-stack-9084b206897d        
   ContainerInstances:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       ImageId: !Ref 'ECSAMI'
-      SecurityGroups: [!ImportValue [!Join [':', [!Ref 'StackName', 'ECSSecurityGroup']]]]
+      SecurityGroups:
+      - Fn::ImportValue:
+          !Join [':', [!Ref 'StackName', 'ECSSecurityGroup']]
       InstanceType: !Ref 'InstanceType'
       IamInstanceProfile: !Ref 'EC2InstanceProfile'
       UserData:
-        Fn::Base64: !Sub |
-          #!/bin/bash -xe
-          echo ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config
-          yum install -y aws-cfn-bootstrap
-          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}
+        Fn::Base64: !Sub
+          - |
+            #!/bin/bash -xe
+            echo ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config
+            yum install -y aws-cfn-bootstrap
+            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}
+          - ECSCluster:
+              Fn::ImportValue:
+                !Join [ ':', [ !Ref 'StackName', 'ClusterName' ] ]
 
 
 
@@ -103,6 +116,8 @@ Parameters:
   EC2Role:
     Type: AWS::IAM::Role
     Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
       AssumeRolePolicyDocument:
         Statement:
         - Effect: Allow
