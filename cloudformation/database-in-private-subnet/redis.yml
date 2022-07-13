@@ -8,13 +8,18 @@ Parameters:
     Type: String
     Description: The ID of the second subnet to place the redis into.
     Default: 'cache.t2.micro'
-    
+  CacheSubnetGroupName:
+    Type: String
+    Description: The name of the elasticache subnet group name
+    Default: 'ElasticacheSubnetGroupName'
 Resources:
 
   CacheSubnetGroup:
     Type: AWS::ElastiCache::SubnetGroup
+    DependsOn: RedisCluster
     Properties:
       Description: Cache Subnet Group
+      CacheSubnetGroupName: !Ref CacheSubnetGroupName
       SubnetIds:
         - Fn::ImportValue:
             !Join [':', [!Ref 'NetworkStackName', 'PrivateSubnetOne']]
@@ -23,9 +28,10 @@ Resources:
 
   RedisCluster:
     Type: AWS::ElastiCache::CacheCluster
-    Properties:    
-      Engine: memcached
-      CacheNodeType: cache.t2.micro
+    Properties:
+      CacheSubnetGroupName: !Ref CacheSubnetGroupName
+      Engine: redis
+      CacheNodeType: !Ref CacheInstanceClass
       NumCacheNodes: '1'
       VpcSecurityGroupIds:
         - Fn::ImportValue:
