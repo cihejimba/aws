@@ -106,6 +106,22 @@ Resources:
       IpProtocol: -1
       SourceSecurityGroupId: !Ref 'WebServerSecurityGroup'
 
+  ElasticacheSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Elasticache Security Group
+      VpcId: !Ref 'VPC'
+
+  ElasticacheSecurityGroupIngressFromWebServer:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Ingress from web server to Elasticache
+      GroupId: !Ref 'ElasticacheSecurityGroup'
+      IpProtocol: tcp
+      FromPort: 11211
+      ToPort: 11211
+      SourceSecurityGroupId: !Ref 'WebServerSecurityGroup'
+          
 Outputs:
   PrivateSubnetOne:
     Description: Private subnet one
@@ -122,6 +138,11 @@ Outputs:
     Value: !Ref 'DBSecurityGroup'
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'DBSecurityGroupId' ] ]
+  ElasticacheSecurityGroupId:
+    Description: ID of the security group that a redis can be placed into.
+    Value: !Ref 'ElasticacheSecurityGroup'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ElasticacheSecurityGroupId' ] ]
   VPCId:
     Description: The ID of the VPC that this stack is deployed in
     Value: !Ref 'VPC'
