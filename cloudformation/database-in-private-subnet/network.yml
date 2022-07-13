@@ -86,11 +86,11 @@ Resources:
       CidrBlock: '10.0.102.0/24'
       MapPublicIpOnLaunch: false
 
- WebServerSecurityGroup:
-   Type: AWS::EC2::SecurityGroup
-   Properties:
-     GroupDescription: Access to the web server
-     VpcId: !Ref 'VPC'
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Access to the web server
+      VpcId: !Ref 'VPC'
       
   DBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
