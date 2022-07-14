@@ -41,11 +41,12 @@ Resources:
   PostgresInstance:
     Type: AWS::RDS::DBInstance
     Properties:
+      MultiAZ: true
       AllocatedStorage: 20
-      AvailabilityZone:
-        Fn::Select:
-          - 0
-          - Fn::GetAZs: {Ref: 'AWS::Region'}
+#      AvailabilityZone:
+#        Fn::Select:
+#          - 0
+#          - Fn::GetAZs: {Ref: 'AWS::Region'}
       DBInstanceClass: !Ref 'DBInstanceClass'
       DBName: !Ref 'DBName'
       DBSubnetGroupName: !Ref 'DBSubnetGroup'
@@ -57,7 +58,8 @@ Resources:
       VPCSecurityGroups:
         - Fn::ImportValue:
             !Join [':', [!Ref 'NetworkStackName', 'DBSecurityGroupId']]
-
+      DeletionPolicy: Snapshot
+            
   SecretRDSInstanceAttachment:
     Type: "AWS::SecretsManager::SecretTargetAttachment"
     Properties:

@@ -1,4 +1,5 @@
 # https://github.com/Integralist/CloudFormation/blob/master/redis.yaml
+# https://medium.com/pablo-perez/redis-elasticache-multiaz-in-cloudformation-57338b6653ce
 lancer
 create-network.sh
 create-database.sh

@@ -6,4 +6,7 @@ aws cloudformation create-stack \
   --template-body file://redis.yml \
   --parameters \
       ParameterKey=NetworkStackName,ParameterValue=rds-network \
-      ParameterKey=CacheInstanceClass,ParameterValue=cache.t3.medium
+      ParameterKey=CacheNodeType,ParameterValue=cache.t3.medium	\
+      ParameterKey=MultiAZSupport,ParameterValue=true \
+      ParameterKey=NumCacheClusters,ParameterValue=2 \
+      ParameterKey=SnapshotRetentionLimit,ParameterValue=7
