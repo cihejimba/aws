@@ -76,7 +76,8 @@ Resources:
     Type: 'AWS::ElastiCache::ReplicationGroup'
     DependsOn: CacheSubnetGroup
     Properties:
-      AutomaticFailoverEnabled: !Ref MultiAZSupport
+      #AutomaticFailoverEnabled: !Ref MultiAZSupport
+      MultiAZEnabled: !Ref MultiAZSupport
       CacheNodeType: !Ref CacheNodeType
       CacheSubnetGroupName: !Ref CacheSubnetGroupName
       Engine: redis
