@@ -40,6 +40,7 @@ Resources:
 
   PostgresInstance:
     Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot    
     Properties:
       MultiAZ: true
       AllocatedStorage: 20
@@ -58,7 +59,6 @@ Resources:
       VPCSecurityGroups:
         - Fn::ImportValue:
             !Join [':', [!Ref 'NetworkStackName', 'DBSecurityGroupId']]
-      DeletionPolicy: Snapshot
             
   SecretRDSInstanceAttachment:
     Type: "AWS::SecretsManager::SecretTargetAttachment"

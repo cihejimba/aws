@@ -74,6 +74,7 @@ Resources:
 
   ReplicationGroup:
     Type: 'AWS::ElastiCache::ReplicationGroup'
+    DeletionPolicy: Snapshot
     DependsOn: CacheSubnetGroup
     Properties:
       #AutomaticFailoverEnabled: !Ref MultiAZSupport
