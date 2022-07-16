@@ -1,0 +1,19 @@
+# source database
+db_name = "" # database name
+db_user = "" 
+db_password = ""
+db_host = "" # ip or dns name
+db_port = "5432" 
+
+# target database
+dst_db_name = "MyDatabase"
+dst_db_user = "dbroot"
+dst_db_password = ""
+dst_db_host = ""
+dst_db_port = "5432"
+
+repli_instance_sg_id = "sg-01158c413804c23c4" # security group id du web server (permet de se connecter au RDS)
+repli_instance_subnetids = ["subnet-0b30a6ddddcd31958","subnet-095897c5e60885150"] # liste des ids des public subnet
+repli_instance_az = "ap-northeast-1a" # AZ ou l'on va installer serveur DMS
+vpc_id = "vpc-0d9a6d5eb3128d7fb" # VPC ID 
+
