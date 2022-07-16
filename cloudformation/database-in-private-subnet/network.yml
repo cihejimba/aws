@@ -91,6 +91,16 @@ Resources:
     Properties:
       GroupDescription: Access to the web server
       VpcId: !Ref 'VPC'
+
+  WebServerSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Ingress to web server
+      GroupId: !Ref 'WebServerSecurityGroup'
+      IpProtocol: 'tcp'
+      FromPort: 22
+      ToPort: 22
+      CidrIp: "0.0.0.0/0"
       
   DBSecurityGroup:
     Type: AWS::EC2::SecurityGroup

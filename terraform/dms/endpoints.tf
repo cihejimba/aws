@@ -16,7 +16,7 @@ resource "aws_dms_endpoint" "src_endpoint" {
   password                    = var.db_password
   port                        = var.db_port
   server_name                 = var.db_host
-  ssl_mode                    = "none"
+  ssl_mode                    = "require"
 
   tags = {
     Name = "src_endpoint"
