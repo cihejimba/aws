@@ -12,4 +12,5 @@ variable dst_db_port {}
 
 variable repli_instance_sg_id {}
 variable repli_instance_subnetids {}
+variable repli_instance_az {}
 variable vpc_id {}

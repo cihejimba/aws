@@ -3,7 +3,7 @@ resource "aws_dms_replication_instance" "migration-postgres" {
   allocated_storage            = 20
   apply_immediately            = true
   auto_minor_version_upgrade   = true
-  availability_zone            = "ap-northeast-1a"
+  availability_zone            = var.repli_instance_az
   #engine_version               = "3.1.4"
   #kms_key_arn                  = "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"
   multi_az                     = false
