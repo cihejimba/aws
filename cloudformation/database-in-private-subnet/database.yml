@@ -25,7 +25,9 @@ Resources:
         SecretStringTemplate: !Join ['', ['{"username": "', !Ref 'DBUsername' ,'"}']]
         GenerateStringKey: "password"
         PasswordLength: 32
-        ExcludeCharacters: '"@/\'
+        #ExcludeCharacters: '"@/\'
+        ExcludeUppercase: true
+        ExcludePunctuation: true
 
   DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
@@ -44,6 +46,7 @@ Resources:
     Properties:
       MultiAZ: true
       AllocatedStorage: 20
+      StorageType: gp2
 #      AvailabilityZone:
 #        Fn::Select:
 #          - 0
