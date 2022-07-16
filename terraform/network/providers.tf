@@ -6,19 +6,9 @@ terraform {
     }
   }
 
-  /*
-  cloud {
-    organization = "dangconsulting"
-
-    workspaces {
-      name = "whitebunny"
-    }
-  }
-*/
 }
 
 provider "aws" {
-#  region = "ap-northeast-1"
 }
 
 
