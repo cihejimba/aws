@@ -10,4 +10,6 @@ variable dst_db_password {}
 variable dst_db_host {}
 variable dst_db_port {}
 
+variable repli_instance_sg_id {}
+variable repli_instance_subnetids {}
 variable vpc_id {}
