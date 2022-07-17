@@ -31,10 +31,10 @@ resource "aws_ssm_parameter" "private_subnets" {
 }
 
 resource "aws_ssm_parameter" "security_groups" {
-  count = length(local.ssm_sec_grp_names)
-  name  = "${local.security_group_prefix}/${local.ssm_sec_grp_names[count.index]}"
+  count = length(local.sec_grp_names)
+  name  = "${local.sec_grp_prefix}/${local.sec_grp_names[count.index]}"
   type  = "String"
-  value = "${local.ssm_sec_grp_ids[count.index]}" 
+  value = "${local.sec_grp_ids[count.index]}" 
 
   tags = local.common_tags
 }
