@@ -29,16 +29,12 @@ resource "aws_ssm_parameter" "private_subnets" {
 
   tags = local.common_tags
 }
-/*
-resource "aws_ssm_parameter" "security_groups" {
 
-  count = length(aws_security_group.security_groups)
-  
-  name  = "${local.prefix_security_groups}/${aws_security_group.security_groups[count.index].name}"
+resource "aws_ssm_parameter" "security_groups" {
+  count = length(local.ssm_sec_grp_names)
+  name  = "${local.security_group_prefix}/${local.ssm_sec_grp_names[count.index]}"
   type  = "String"
-  value = aws_security_group.security_groups[count.index].id
+  value = "${local.ssm_sec_grp_ids[count.index]}" 
 
   tags = local.common_tags
 }
-*/
-
