@@ -21,9 +21,5 @@ module "vpc" {
   enable_nat_gateway = false
   enable_vpn_gateway = false
 
-  tags = {
-    Terraform = "true"
-    Environment = "prod"
-    "Patch Group" = "al2-prod"
-  }
+  tags = local.common_tags
 }
