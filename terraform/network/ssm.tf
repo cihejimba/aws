@@ -3,7 +3,7 @@ resource "aws_ssm_parameter" "vpc_id" {
   type  = "String"
   value = module.vpc.vpc_id
 
-  tags = local.common_tags
+  tags = local.env_tag
 }
 
 resource "aws_ssm_parameter" "azs" {
@@ -11,7 +11,7 @@ resource "aws_ssm_parameter" "azs" {
   type  = "StringList"
   value = join(",",module.vpc.azs)
 
-  tags = local.common_tags
+  tags = local.env_tag
 }
 
 resource "aws_ssm_parameter" "public_subnets" {
@@ -19,7 +19,7 @@ resource "aws_ssm_parameter" "public_subnets" {
   type  = "StringList"
   value = join(",",module.vpc.public_subnets)
 
-  tags = local.common_tags
+  tags = local.env_tag
 }
 
 resource "aws_ssm_parameter" "private_subnets" {
@@ -27,7 +27,7 @@ resource "aws_ssm_parameter" "private_subnets" {
   type  = "StringList"
   value = join(",",module.vpc.private_subnets)
 
-  tags = local.common_tags
+  tags = local.env_tag
 }
 
 resource "aws_ssm_parameter" "security_groups" {
@@ -36,5 +36,5 @@ resource "aws_ssm_parameter" "security_groups" {
   type  = "String"
   value = "${local.sec_grp_ids[count.index]}" 
 
-  tags = local.common_tags
+  tags = local.env_tag
 }

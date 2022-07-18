@@ -20,7 +20,7 @@ resource "aws_security_group" "webserver_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = merge(local.common_tags, {Name = "webserver_sg"})
+  tags = merge(local.env_tag, {Name = "webserver_sg"})
 }
 
 resource "aws_security_group" "rds_sg" {
@@ -44,7 +44,7 @@ resource "aws_security_group" "rds_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = merge(local.common_tags, {Name = "rds_sg"})
+  tags = merge(local.env_tag, {Name = "rds_sg"})
 }
 
 resource "aws_security_group" "ec_sg" {
@@ -68,7 +68,7 @@ resource "aws_security_group" "ec_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = merge(local.common_tags, {Name = "ec_sg"})
+  tags = merge(local.env_tag, {Name = "ec_sg"})
 }
 
 resource "aws_security_group" "alb_sg" {
@@ -93,7 +93,7 @@ resource "aws_security_group" "alb_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = merge(local.common_tags, {Name = "alb_sg"})
+  tags = merge(local.env_tag, {Name = "alb_sg"})
 }
 
 resource "aws_security_group" "ecstask_sg" {
@@ -125,5 +125,5 @@ resource "aws_security_group" "ecstask_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = merge(local.common_tags, {Name = "ec_sg"})
+  tags = merge(local.env_tag, {Name = "ec_sg"})
 }

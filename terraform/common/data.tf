@@ -14,14 +14,7 @@ data "aws_ssm_parameter" "private_subnets" {
   name = local.private_subnets
 }
 
-data "aws_ssm_parameter" "webserver_sg" {
-  name = "${local.sec_grp_prefix}/webserver_sg"
-}
-
-data "aws_ssm_parameter" "rds_sg" {
-  name = "${local.sec_grp_prefix}/rds_sg"
-}
-
-data "aws_ssm_parameter" "ec_sg" {
-  name = "${local.sec_grp_prefix}/ec_sg"
+data "aws_ssm_parameter" "security_groups" {
+  count = length(local.sec_grp_names)
+  name = "${local.sec_grp_prefix}/${local.sec_grp_names[count.index]}"
 }
