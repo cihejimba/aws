@@ -71,3 +71,59 @@ resource "aws_security_group" "ec_sg" {
   tags = merge(local.common_tags, {Name = "ec_sg"})
 }
 
+resource "aws_security_group" "alb_sg" {
+  name        = "alb_sg"
+  description = "Application Load Balancer Security Group"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    description      = "Allow access to ALB from anywhere"
+    protocol         = "-1"
+    from_port        = 0
+    to_port          = 0
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]    
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  tags = merge(local.common_tags, {Name = "alb_sg"})
+}
+
+resource "aws_security_group" "ecstask_sg" {
+  name        = "ecstask_sg"
+  description = "ECS TASK Security Group to define in ECS Service"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    description      = "Allow access from ALB"
+    protocol         = "-1"
+    from_port        = 0
+    to_port          = 0
+    security_groups = [aws_security_group.alb_sg.id]
+  }
+
+  ingress {
+    description      = "Allow access from other containers"
+    protocol         = "-1"
+    from_port        = 0
+    to_port          = 0
+    self             = true
+  }
+  
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  tags = merge(local.common_tags, {Name = "ec_sg"})
+}
