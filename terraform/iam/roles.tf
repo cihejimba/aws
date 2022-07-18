@@ -30,7 +30,7 @@ resource "aws_iam_policy" "ecs-task-policy" {
     ]
   })
 
-  tags = local.tf_tag
+  #tags = local.tf_tag
 }
 
 # ecs task role to define in task definition
@@ -40,5 +40,5 @@ resource "aws_iam_role" "ecstask_role" {
   assume_role_policy = data.aws_iam_policy_document.ecs-tasks-assume-role-policy.json
   managed_policy_arns = [aws_iam_policy.ecs-task-policy.arn]
 
-  tags = local.tf_tag
+  #tags = local.tf_tag
 }
