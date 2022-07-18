@@ -25,7 +25,7 @@ locals {
 	logDriver = "awslogs"
 	options = {
 	  awslogs-group = var.service_name
-	  awslogs-region = data.aws_region.current.name
+	  awslogs-region = local.region
 	  awslogs-stream-prefix = var.service_name
 	}
       }

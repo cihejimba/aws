@@ -1,8 +1,12 @@
+data "aws_region" "current" {}
+
 locals {
   provider_tag = { Terraform = "true" } # provider default tag
   env_tag = { Environment = var.env } # will be merged with provider default tag
   ec2_tag = merge(local.env_tag, { "Patch Group" = "al2-${var.env}" })
 
+  region = data.aws_region.current.name
+  
   # For SSM
   vpc_id = "/${var.env}/terraform/vpc/vpc_id"
   azs = "/${var.env}/terraform/vpc/azs"
