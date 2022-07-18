@@ -1,12 +1,3 @@
-data "aws_ssm_parameter" "ecs_agent_role" {
-  name = "${local.iam_role_prefix}/ecs_agent_role"
-}
-
-data "aws_ssm_parameter" "ecs_task_role" {
-  name = "${local.iam_role_prefix}/ecs_task_role"
-}
-
-
 locals {
   container_definitions = jsonencode([
     {
@@ -35,7 +26,7 @@ locals {
 }
 
 
-resource "aws_ecs_task_definition" "test" {
+resource "aws_ecs_task_definition" "app" {
   family                   = var.service_name
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"

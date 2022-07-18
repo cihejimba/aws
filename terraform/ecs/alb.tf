@@ -1,16 +1,3 @@
-data "aws_ssm_parameter" "alb_sg" {
-  name = "${local.sec_grp_prefix}/alb_sg"
-}
-
-data "aws_ssm_parameter" "public_subnets" {
-  name = local.public_subnets
-}
-
-data "aws_ssm_parameter" "vpc_id" {
-  name = local.vpc_id
-}
-
-
 resource "aws_lb" "front_end" {
   name = "public-alb"
   internal = false
@@ -64,6 +51,7 @@ resource "aws_lb_listener_rule" "host_based_routing" {
     }
   }
 }
+
 
 
 
