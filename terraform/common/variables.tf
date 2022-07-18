@@ -45,6 +45,10 @@ variable container_memory {
   default = 512
 }
 
+variable container_port {
+  default = 80
+}
+
 variable desired_count {
   description = "How many copies of the service task to run."
   default = 2
@@ -54,4 +58,14 @@ variable image_url {
   description = "The url of a docker image that will handle incoming traffic."
   default = "hello-world"
 }
-### ECS ###
+
+### ALB ###
+variable health_check_interval {
+  default = 0
+}
+
+variable health_check_path {
+  default = ""
+}
+
+

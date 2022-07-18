@@ -17,8 +17,8 @@ locals {
       essential = true
       portMappings = [
 	{
-	  containerPort = 80
-	  hostPort      = 80
+	  containerPort = var.container_port
+	  #hostPort      = var.container_port
 	}
       ]
       logConfiguration = {
