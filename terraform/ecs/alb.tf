@@ -11,7 +11,7 @@ data "aws_ssm_parameter" "vpc_id" {
 }
 
 
-resource "aws_lb" "alb" {
+resource "aws_lb" "front_end" {
   name = "public-alb"
   internal = false
   load_balancer_type = "application"
@@ -19,7 +19,7 @@ resource "aws_lb" "alb" {
   subnets            = split(",", data.aws_ssm_parameter.public_subnets.value)
 }
 
-resource "aws_lb_target_group" "ecs_tg" {
+resource "aws_lb_target_group" "front_end" {
   name        = "tg-to-${var.service_name}"
   
   port        = var.container_port
@@ -35,6 +35,35 @@ resource "aws_lb_target_group" "ecs_tg" {
     healthy_threshold = 2
     unhealthy_threshold = 2    
     matcher = "200"  # has to be HTTP 200 or fails
-  }
-  
+  } 
 }
+
+resource "aws_lb_listener" "front_end" {
+  load_balancer_arn = aws_lb.front_end.arn
+  #port              = "8080"
+  #protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    #target_group_arn = aws_lb_target_group.front_end.arn
+  }
+}
+
+resource "aws_lb_listener_rule" "host_based_routing" {
+  listener_arn = aws_lb_listener.front_end.arn
+  priority = 1
+  
+  action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.front_end.arn
+  }
+
+  condition {
+    path_pattern {
+      values = [var.alb_path]
+    }
+  }
+}
+
+
+

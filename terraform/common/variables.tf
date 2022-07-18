@@ -46,6 +46,7 @@ variable container_memory {
 }
 
 variable container_port {
+  description = "The port number the application inside the docker container"
   default = 80
 }
 
@@ -61,11 +62,18 @@ variable image_url {
 
 ### ALB ###
 variable health_check_interval {
-  default = 0
+  description = "Number of seconds to wait between each health check."
+  default = 90
 }
 
 variable health_check_path {
-  default = ""
+  description = "Path to perform the healthcheck on each instance."
+  default = "/"
+}
+
+variable alb_path {
+  description = "A path on the public load balancer that this service should be connected to."
+  default = "*"
 }
 
 
