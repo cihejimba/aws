@@ -10,7 +10,7 @@ terraform {
 
 provider "aws" {
   default_tags {
-    tags = local.tf_tag
+    tags = local.provider_tag
   }
 }
 

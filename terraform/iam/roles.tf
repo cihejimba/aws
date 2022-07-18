@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "ecs-tasks-assume-role-policy" {
+data "aws_iam_policy_document" "ecs_tasks_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -9,8 +9,9 @@ data "aws_iam_policy_document" "ecs-tasks-assume-role-policy" {
   }
 }
 
-resource "aws_iam_policy" "ecs-task-policy" {
-  name = "ecs-task-policy"
+/*
+resource "aws_iam_policy" "ecs_agent_policy" {
+  name = "ecs-agent-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -28,17 +29,20 @@ resource "aws_iam_policy" "ecs-task-policy" {
         Resource = "*"
       },
     ]
-  })
+  }) 
+}
+*/
 
-  #tags = local.tf_tag
+# ecs agent role aka execution role
+resource "aws_iam_role" "ecs_agent_role" {
+  name = "ecs-agent-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_tasks_assume_role_policy.json
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
-# ecs task role to define in task definition
-resource "aws_iam_role" "ecstask_role" {
-  name = "ecstask_role"
-  #path = "/system/"
-  assume_role_policy = data.aws_iam_policy_document.ecs-tasks-assume-role-policy.json
-  managed_policy_arns = [aws_iam_policy.ecs-task-policy.arn]
-
-  #tags = local.tf_tag
+# ecs task role
+resource "aws_iam_role" "ecs_task_role" {
+  name = "ecs-task-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_tasks_assume_role_policy.json
+  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonS3FullAccess"]
 }

@@ -1,3 +1,4 @@
+/*
 data "aws_ssm_parameter" "vpc_id" {
   name = local.vpc_id
 }
@@ -13,6 +14,7 @@ data "aws_ssm_parameter" "public_subnets" {
 data "aws_ssm_parameter" "private_subnets" {
   name = local.private_subnets
 }
+*/
 
 data "aws_region" "current" {}
 
