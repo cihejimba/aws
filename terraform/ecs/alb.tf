@@ -4,6 +4,8 @@ resource "aws_lb" "front_end" {
   load_balancer_type = "application"
   security_groups    = [data.aws_ssm_parameter.alb_sg.value]
   subnets            = split(",", data.aws_ssm_parameter.public_subnets.value)
+
+  tags = local.env_tag
 }
 
 resource "aws_lb_target_group" "front_end" {
@@ -22,18 +24,22 @@ resource "aws_lb_target_group" "front_end" {
     healthy_threshold = 2
     unhealthy_threshold = 2    
     matcher = "200"  # has to be HTTP 200 or fails
-  } 
+  }
+
+  tags = local.env_tag
 }
 
 resource "aws_lb_listener" "front_end" {
   load_balancer_arn = aws_lb.front_end.arn
-  #port              = "8080"
-  #protocol          = "HTTP"
+  port              = 80
+  protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    #target_group_arn = aws_lb_target_group.front_end.arn
+    target_group_arn = aws_lb_target_group.front_end.arn
   }
+
+  tags = local.env_tag
 }
 
 resource "aws_lb_listener_rule" "host_based_routing" {
@@ -50,6 +56,8 @@ resource "aws_lb_listener_rule" "host_based_routing" {
       values = [var.alb_path]
     }
   }
+
+  tags = local.env_tag
 }
 
 

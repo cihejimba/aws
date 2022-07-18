@@ -21,4 +21,6 @@ resource "aws_ecs_service" "app" {
     container_name   = var.service_name
     container_port   = var.container_port
   }
+
+  tags = local.env_tag
 }

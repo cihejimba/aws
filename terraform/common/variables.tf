@@ -57,7 +57,7 @@ variable desired_count {
 
 variable image_url {
   description = "The url of a docker image that will handle incoming traffic."
-  default = "hello-world"
+  default = "nginxdemos/hello"
 }
 
 ### ALB ###

@@ -35,4 +35,6 @@ resource "aws_ecs_task_definition" "app" {
   execution_role_arn       = data.aws_ssm_parameter.ecs_agent_role.value
   task_role_arn            = data.aws_ssm_parameter.ecs_task_role.value
   container_definitions    = local.container_definitions
+
+  tags = local.env_tag
 }
