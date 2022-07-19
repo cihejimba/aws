@@ -22,6 +22,10 @@ locals {
   # For ECS
   awslogs_group = "/aws/ecs/${var.service_name}"
   awslogs_stream_prefix = "env=${var.env} image_url=${var.image_url} "
+
+  # ECS AS
+  min_capacity = 1
+  max_capacity = 10
 }
 
 variable env {
