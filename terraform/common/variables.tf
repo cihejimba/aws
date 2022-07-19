@@ -18,6 +18,10 @@ locals {
   # For IAM
   iam_role_prefix = "/${var.env}/terraform/iam_role"
   iam_role_names = ["ecs_agent_role","ecs_task_role"] # update iam/ssm.tf too
+
+  # For ECS
+  awslogs_group = "/aws/ecs/${var.service_name}"
+  awslogs_stream_prefix = "env=${var.env} image_url=${var.image_url} "
 }
 
 variable env {
@@ -27,12 +31,12 @@ variable env {
 ### ECS ###
 variable cluster_name {
   description = "A human-readable name for the cluster."
-  default = "ecs-cluster"
+  default = "webapp-cluster"
 }
 
 variable service_name {
   description = "A human-readable name for the service."
-  default = "ecs-service"
+  default = "webapp"
 }
 
 variable container_cpu {

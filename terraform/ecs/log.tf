@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_log_group" "ecs_service" {
-  name = var.service_name
-  retention_in_days = 1
+  name = local.awslogs_group
+  retention_in_days = 30
   tags = local.env_tag
 }

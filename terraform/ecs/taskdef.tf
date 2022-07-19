@@ -15,9 +15,9 @@ locals {
       logConfiguration = {
 	logDriver = "awslogs"
 	options = {
-	  awslogs-group = var.service_name
+	  awslogs-group = local.awslogs_group
 	  awslogs-region = local.region
-	  awslogs-stream-prefix = var.service_name
+	  awslogs-stream-prefix = local.awslogs_stream_prefix
 	}
       }
       
