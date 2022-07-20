@@ -3,6 +3,7 @@ resource "aws_s3_bucket" "default" {
   tags = local.env_tag
 }
 
+# https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/samples/python.zip
 resource "null_resource" "webapp" {
   provisioner "local-exec" {
     command = "curl -L https://github.com/ThaiDangFr/helloworld-django/archive/refs/heads/main.zip -o webapp.zip"
